@@ -1,2 +1,4 @@
 worker/
 node_modules/
+
+wrangler.toml

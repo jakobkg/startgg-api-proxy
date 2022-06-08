@@ -42,7 +42,7 @@ async function handleOptionsRequest(): Promise<Response> {
  */
 async function handleGetRequest(): Promise<Response> {
     return new Response(
-        "This proxy is intended to use by sending a POST request with the ID of the bracket you'd like data for. For further instructions, see the GitHub repository at ASDF",
+        "This proxy is intended to use by sending a POST request with the ID of the bracket you'd like data for. For further instructions, see the GitHub repository at https://github.com/jakobkg/startgg-api-proxy",
         {
             headers: {
                 'Access-Control-Allow-Origin': '*',
