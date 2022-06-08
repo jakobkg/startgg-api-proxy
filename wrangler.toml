@@ -1,0 +1,19 @@
+name = "startgg-api-proxy"
+type = "javascript"
+
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+compatibility_date = "2022-06-07"
+
+tsconfig = "./tsconfig.json"
+
+[build]
+command = "npm i && npm run build"
+
+[build.upload]
+format = "service-worker"
+
+# [secrets]
+# STARTGG_API_KEY
