@@ -93,7 +93,7 @@ wrangler login
 ## Usage
 
 This proxy expects to receive a POST request with a body
-```json
+```js
 {
   phaseId: number
 }
