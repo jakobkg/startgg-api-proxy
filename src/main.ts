@@ -63,7 +63,7 @@ async function handlePostRequest(request: Request): Promise<Response> {
 
         // Some basic validations, no need to query the start.gg API if we know the query isn't valid
 
-        if (requestBody.phaseId === null) {
+        if (requestBody.phaseId === null || isNaN(requestBody.phaseId)) {
             throw new Error("No phaseId provided");
         }
 
@@ -71,7 +71,14 @@ async function handlePostRequest(request: Request): Promise<Response> {
             throw new Error("Invalid phaseId value");
         }
     } catch (error) {
-        return new Response("Invalid request, missing or invalid phaseId", {status: 400})
+        return new Response(
+            JSON.stringify({error: "Invalid request, missing or invalid phaseId"}), {
+            status: 400,
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            }
+        }
+        )
     }
 
     const phase = await fetch('https://api.start.gg/gql/alpha', {
@@ -89,10 +96,10 @@ async function handlePostRequest(request: Request): Promise<Response> {
             },
         }),
     })
-    .then((response) => response.json())
-    .then((data) => {
-        return data;
-    });
+        .then((response) => response.json())
+        .then((data) => {
+            return data;
+        });
 
     return new Response(JSON.stringify(phase), {
         headers: {
