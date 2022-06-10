@@ -60,9 +60,18 @@ async function handlePostRequest(request: Request): Promise<Response> {
     let requestBody: ClientRequest;
     try {
         requestBody = await request.json();
-        requestBody.phaseId;
+
+        // Some basic validations, no need to query the start.gg API if we know the query isn't valid
+
+        if (requestBody.phaseId === null) {
+            throw new Error("No phaseId provided");
+        }
+
+        if (requestBody.phaseId < 0) {
+            throw new Error("Invalid phaseId value");
+        }
     } catch (error) {
-        requestBody = { phaseId: -1 };
+        return new Response("Invalid request, missing or invalid phaseId", {status: 400})
     }
 
     const phase = await fetch('https://api.start.gg/gql/alpha', {
