@@ -1,4 +1,3 @@
-import { ClientRequest } from './clientRequest';
 import { query } from './query';
 
 addEventListener('fetch', (event: FetchEvent) => {
