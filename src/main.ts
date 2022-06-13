@@ -63,16 +63,17 @@ async function handlePostRequest(request: Request): Promise<Response> {
 
         // Some basic validations, no need to query the start.gg API if we know the query isn't valid
 
-        if (requestBody.phaseId === null || isNaN(requestBody.phaseId)) {
-            throw new Error("No phaseId provided");
+        if (requestBody.groupId === null || isNaN(requestBody.groupId)) {
+            throw new Error("No groupId provided");
         }
 
-        if (requestBody.phaseId < 0) {
-            throw new Error("Invalid phaseId value");
+        if (requestBody.groupId < 0) {
+            throw new Error("Invalid groupId value");
         }
     } catch (error) {
+        console.log(request);
         return new Response(
-            JSON.stringify({error: "Invalid request, missing or invalid phaseId"}), {
+            JSON.stringify({error: "Invalid request, missing or invalid groupId"}), {
             status: 400,
             headers: {
                 'Access-Control-Allow-Origin': '*'
@@ -86,13 +87,13 @@ async function handlePostRequest(request: Request): Promise<Response> {
         headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            // @ts-ignore
+            // @ts-ignore This is the API key that should be stored as a project secret
             Authorization: `Bearer ${STARTGG_API_KEY}`,
         },
         body: JSON.stringify({
             query: query,
             variables: {
-                phaseId: requestBody.phaseId,
+                groupId: requestBody.groupId,
             },
         }),
     })

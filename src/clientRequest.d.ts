@@ -1,3 +1,3 @@
 declare type ClientRequest = {
-    phaseId: number;
+    groupId: number;
 };

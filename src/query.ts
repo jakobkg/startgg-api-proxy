@@ -1,24 +1,23 @@
-export const query = `
-  query TournamentEvents($phaseId: ID) {
-    phase(id: $phaseId) {
-      name
-      sets {
-        nodes {
-          fullRoundText
-          round
-          slots {
-            entrant {
-              name
-            }
-            standing {
-              stats {
-                score {
-                  value
-                }
+export const query: string = `
+query TournamentEvents($groupId: ID) {
+  phaseGroup(id: $groupId) {
+    bracketType
+    sets(perPage: 100) {
+      nodes {
+        fullRoundText
+        slots {
+          entrant {
+            name
+          }
+          standing {
+            stats {
+              score {
+                value
               }
             }
           }
         }
       }
     }
-  }`;
+  }
+}`;
