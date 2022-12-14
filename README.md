@@ -95,10 +95,10 @@ wrangler login
 This proxy expects to receive a POST request with a body
 ```js
 {
-  phaseId: number
+  groupId: number
 }
 ```
-The `phaseId` is used in a query to the start.gg GraphQL API, the exact query can be found in [the query.ts source file](src/query.ts). The response to this query is directly forwarded as a response to the original POST request.
+The `groupId` is used in a query to the start.gg GraphQL API, the exact query can be found in [the query.ts source file](src/query.ts). The response to this query is directly forwarded as a response to the original POST request.
 
 The shape of the response from the start.gg API is consistent and can be consumed into a relatively simple object.
 
