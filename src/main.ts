@@ -73,7 +73,7 @@ async function handlePostRequest(request: Request): Promise<Response> {
     } catch (error) {
         console.log(request);
         return new Response(
-            JSON.stringify({error: "Invalid request, missing or invalid groupId"}), {
+            JSON.stringify({ error: "Invalid request, missing or invalid groupId" }), {
             status: 400,
             headers: {
                 'Access-Control-Allow-Origin': '*'
@@ -82,25 +82,47 @@ async function handlePostRequest(request: Request): Promise<Response> {
         )
     }
 
-    const phase = await fetch('https://api.start.gg/gql/alpha', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            // @ts-ignore This is the API key that should be stored as a project secret
-            Authorization: `Bearer ${STARTGG_API_KEY}`,
-        },
-        body: JSON.stringify({
-            query: query,
-            variables: {
-                groupId: requestBody.groupId,
+    let currentPage = 1;
+    let totalPages = -1;
+
+    let nodes: SetNode[] | null = null;
+    let phase: StartggResponse;
+
+    do {
+        phase = await fetch('https://api.start.gg/gql/alpha', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                // @ts-ignore This is the API key that should be stored as a project secret
+                Authorization: `Bearer ${STARTGG_API_KEY}`,
             },
-        }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            return data;
-        });
+            body: JSON.stringify({
+                query: query,
+                variables: {
+                    groupId: requestBody.groupId,
+                    page: currentPage,
+                    perPage: 25
+                },
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                return data as StartggResponse;
+            });
+
+        if (totalPages == -1) { totalPages = phase.data.phaseGroup.sets.pageInfo.totalPages; }
+
+        if (nodes === null) {
+            nodes = phase.data.phaseGroup.sets.nodes;
+        } else {
+            nodes = nodes.concat(phase.data.phaseGroup.sets.nodes);
+        }
+
+        currentPage++;
+    } while (totalPages == -1 || currentPage <= totalPages)
+
+    phase.data.phaseGroup.sets.nodes = nodes;
 
     return new Response(JSON.stringify(phase), {
         headers: {

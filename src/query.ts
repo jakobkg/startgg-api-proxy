@@ -1,9 +1,14 @@
 export const query: string = `
-query TournamentEvents($groupId: ID) {
+query TournamentEvents($groupId: ID!, $page: Int!, $perPage: Int!) {
   phaseGroup(id: $groupId) {
     bracketType
-    sets(perPage: 100, sortType: ROUND) {
+    sets(sortType: ROUND, page: $page, perPage: $perPage) {
+      pageInfo {
+        page
+        totalPages
+      }
       nodes {
+        id
         fullRoundText
         slots {
           entrant {
